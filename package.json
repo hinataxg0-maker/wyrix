@@ -1,0 +1,7 @@
+{
+  "name": "wyrix",
+  "private": true,
+  "dependencies": {
+    "@netlify/blobs": "11.1.9"
+  }
+}
