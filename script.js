@@ -1,7 +1,17 @@
+const returnUrl = new URL(window.location.href);
+if (returnUrl.hash === '#owner' && returnUrl.searchParams.has('code') && returnUrl.searchParams.has('state')) {
+  for (const parameter of ['code', 'state', 'iss']) {
+    returnUrl.searchParams.delete(parameter);
+  }
+  window.history.replaceState(window.history.state, '', returnUrl.pathname + returnUrl.search + returnUrl.hash);
+}
+
 async function loadOwnerPanel() {
   const status = document.getElementById('owner-status');
   const content = document.getElementById('owner-content');
   const login = document.getElementById('owner-login');
+
+  login.style.display = 'none';
 
   try {
     const response = await fetch('/.netlify/functions/auth-session', {
@@ -33,6 +43,7 @@ async function loadOwnerPanel() {
   }
 
   login.hidden = false;
+  login.style.removeProperty('display');
 }
 
 loadOwnerPanel();
