@@ -1,0 +1,1 @@
+const a=require('./_auth');exports.handler=async()=>a.response(302,'',{Location:(a.base()||'/')+'/#home','Set-Cookie':a.cookie('wyrix_session','',0)});
