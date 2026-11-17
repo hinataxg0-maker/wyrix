@@ -1,0 +1,1 @@
+const a=require('./_auth');exports.handler=async(event)=>{const s=a.decode(a.getCookie(event,'wyrix_session'));if(!s||!s.owner||s.id!==a.ownerId)return a.response(403,{error:'Forbidden'},{'Content-Type':'application/json'});return a.response(200,{role:'owner',status:'verified'},{'Content-Type':'application/json'});};
