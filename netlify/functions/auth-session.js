@@ -1,0 +1,1 @@
+const a=require('./_auth');exports.handler=async(event)=>{const session=a.decode(a.getCookie(event,'wyrix_session'));return a.response(200,{authenticated:!!session,owner:!!session?.owner},{'Content-Type':'application/json'});};
