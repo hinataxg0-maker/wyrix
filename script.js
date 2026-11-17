@@ -1,1 +1,38 @@
-(async()=>{const status=document.getElementById('owner-status'),content=document.getElementById('owner-content'),login=document.getElementById('owner-login');try{const r=await fetch('/.netlify/functions/auth-session',{credentials:'same-origin',cache:'no-store'});if(!r.ok)throw Error('session');const data=await r.json();if(data.owner){status.textContent='Owner identity verified.';content.hidden=false}else{status.textContent=data.authenticated?'This Discord account is not authorized as Owner.':'Sign in with your authorized Discord account.';login.hidden=false}}catch{status.textContent='Authentication is not configured yet.';login.hidden=false}})();
+async function loadOwnerPanel() {
+  const status = document.getElementById('owner-status');
+  const content = document.getElementById('owner-content');
+  const login = document.getElementById('owner-login');
+
+  try {
+    const response = await fetch('/.netlify/functions/auth-session', {
+      credentials: 'same-origin',
+      cache: 'no-store',
+    });
+    if (!response.ok) throw new Error('Session lookup failed');
+
+    const session = await response.json();
+    if (session.owner && session.panel) {
+      const heading = document.createElement('h3');
+      heading.textContent = session.panel.heading;
+      const message = document.createElement('p');
+      message.textContent = session.panel.message;
+      const logout = document.createElement('a');
+      logout.href = '/.netlify/functions/auth-logout';
+      logout.textContent = 'Sign out';
+      content.replaceChildren(heading, message, logout);
+      content.hidden = false;
+      status.textContent = 'Owner identity verified.';
+      return;
+    }
+
+    status.textContent = session.authenticated
+      ? 'This Discord account is not authorized as Owner.'
+      : 'Sign in with your authorized Discord account.';
+  } catch {
+    status.textContent = 'Could not check your Discord session. Try signing in again.';
+  }
+
+  login.hidden = false;
+}
+
+loadOwnerPanel();
